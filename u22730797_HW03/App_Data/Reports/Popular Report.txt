@@ -1,0 +1,21 @@
+Report Type: 🔥 Popular Products Report
+Generated: 2025/11/02, 10:50:54
+Description: Report about popular bike sales. 
+
+POPULAR PRODUCTS REPORT
+Product,Total Sold,Total Revenue
+Surly Ice Cream Truck Frameset - 2016,165,77548.35
+Electra Cruiser 1 (24-Inch) - 2016,157,42388.43
+Electra Townie Original 7D EQ - 2016,156,93598.44
+Trek Slash 8 27.5 - 2016,154,615998.46
+Electra Girl's Hawaii 1 (20-inch) - 2015/2016,153,45898.47
+Electra Townie Original 21D - 2016,153,84148.47
+Surly Straggler 650b - 2016,151,253829.49
+Electra Townie Original 7D - 2015/2016,148,73998.52
+Surly Straggler - 2016,145,224605
+Trek Conduit+ - 2016,143,428998.57
+Electra Girl's Hawaii 1 (16-inch) - 2015/2016,143,38608.57
+Trek Fuel EX 8 29 - 2016,142,411798.58
+Electra Cruiser 1 (24-Inch) - 2016,139,37528.61
+Electra Moto 1 - 2016,137,72608.63
+Electra Townie Original 7D EQ - 2016,134,80398.66

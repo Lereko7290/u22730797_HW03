@@ -1,0 +1,333 @@
+﻿@model u22730797_HW03.Models.HomeViewModel
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Bike Sales Management</h1>
+        <p class="lead">Welcome to the bicycle sales record management system</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Staff Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0">Staff (@ViewBag.StaffCount)</h5>
+                    <small class="text-muted">Page @Model.StaffPage of @Model.StaffTotalPages</small>
+                </div>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createStaffModal">
+                    Create Staff
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="staffList">
+                    @if (Model.Staffs != null && Model.Staffs.Any())
+                    {
+                        foreach (var staff in Model.Staffs)
+                        {
+                            <div class="mb-2 p-2 border-bottom">
+                                <strong>@staff.first_name @staff.last_name</strong><br>
+                                <small class="text-muted">@staff.email</small><br>
+                                <small class="text-muted">@staff.phone</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No staff members found</p>
+                    }
+                </div>
+
+                <!-- Compact Staff Pagination -->
+                @if (Model.StaffTotalPages > 1)
+                {
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            @if (Model.StaffPage > 1)
+                            {
+                                @Html.ActionLink("← Previous", "Index", new { staffPage = Model.StaffPage - 1, customerPage = Model.CustomerPage }, new { @class = "btn btn-outline-secondary btn-sm" })
+                            }
+                        </div>
+
+                        <small class="text-muted">Page @Model.StaffPage of @Model.StaffTotalPages</small>
+
+                        <div>
+                            @if (Model.StaffPage < Model.StaffTotalPages)
+                            {
+                                @Html.ActionLink("Next →", "Index", new { staffPage = Model.StaffPage + 1, customerPage = Model.CustomerPage }, new { @class = "btn btn-outline-secondary btn-sm" })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Customer Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0">Customers (@ViewBag.CustomerCount)</h5>
+                    <small class="text-muted">Page @Model.CustomerPage of @Model.CustomerTotalPages</small>
+                </div>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createCustomerModal">
+                    Create Customer
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="customerList">
+                    @if (Model.Customers != null && Model.Customers.Any())
+                    {
+                        foreach (var customer in Model.Customers)
+                        {
+                            <div class="mb-2 p-2 border-bottom">
+                                <strong>@customer.first_name @customer.last_name</strong><br>
+                                <small class="text-muted">@customer.email</small><br>
+                                <small class="text-muted">@customer.city, @customer.state</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No customers found</p>
+                    }
+                </div>
+
+                <!-- Compact Customer Pagination -->
+                @if (Model.CustomerTotalPages > 1)
+                {
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            @if (Model.CustomerPage > 1)
+                            {
+                                @Html.ActionLink("← Previous", "Index", new { staffPage = Model.StaffPage, customerPage = Model.CustomerPage - 1 }, new { @class = "btn btn-outline-secondary btn-sm" })
+                            }
+                        </div>
+
+                        <small class="text-muted">Page @Model.CustomerPage of @Model.CustomerTotalPages</small>
+
+                        <div>
+                            @if (Model.CustomerPage < Model.CustomerTotalPages)
+                            {
+                                @Html.ActionLink("Next →", "Index", new { staffPage = Model.StaffPage, customerPage = Model.CustomerPage + 1 }, new { @class = "btn btn-outline-secondary btn-sm" })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Products (@ViewBag.ProductCount)</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Filter by Brand:</label>
+                    <select class="form-control" id="brandFilter">
+                        <option value="">All Brands</option>
+                        @if (Model.Brands != null)
+                        {
+                            foreach (var brand in Model.Brands)
+                            {
+                                <option value="@brand.brand_id">@brand.brand_name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Filter by Category:</label>
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        @if (Model.Categories != null)
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.category_id">@category.category_name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div id="productList">
+                    @if (Model.Products != null && Model.Products.Any())
+                    {
+                        foreach (var product in Model.Products)
+                        {
+                            <div class="mb-2 p-2 border-bottom">
+                                <strong>@product.product_name</strong><br>
+                                <small class="text-muted">@(product.Brand?.brand_name ?? "N/A") - @(product.Category?.category_name ?? "N/A")</small><br>
+                                <small class="text-muted">$@product.list_price - @product.model_year</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No products found</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Staff Modal -->
+<div class="modal fade" id="createStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Staff</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createStaffForm">
+                    <div class="mb-3">
+                        <label class="form-label">First Name:</label>
+                        <input type="text" class="form-control" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone:</label>
+                        <input type="text" class="form-control" name="phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createStaff()">Create Staff</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Customer Modal -->
+<div class="modal fade" id="createCustomerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCustomerForm">
+                    <div class="mb-3">
+                        <label class="form-label">First Name:</label>
+                        <input type="text" class="form-control" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone:</label>
+                        <input type="text" class="form-control" name="phone">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">City:</label>
+                        <input type="text" class="form-control" name="city">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">State:</label>
+                        <input type="text" class="form-control" name="state">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createCustomer()">Create Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+    // Product filtering
+    $('#brandFilter, #categoryFilter').change(function() {
+        filterProducts();
+    });
+
+    function filterProducts() {
+        const brandId = $('#brandFilter').val();
+        const categoryId = $('#categoryFilter').val();
+
+        $.get('@Url.Action("FilterProducts", "Home")', {
+            brandId: brandId || null,
+            categoryId: categoryId || null
+        }, function(data) {
+            $('#productList').html(data);
+        });
+    }
+
+   function createStaff() {
+    const formData = $('#createStaffForm').serialize();
+
+    $.post('@Url.Action("CreateStaff", "Home")', formData)
+        .done(function(response) {
+            if (response.success) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createStaffModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                $('#createStaffForm')[0].reset();
+                // Redirect to first page to see the new staff at the top
+                if (response.redirectToPage) {
+                    window.location.href = '@Url.Action("Index", "Home", new { staffPage = 1, customerPage = 1 })';
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert('Error creating staff: ' + response.errors);
+            }
+        })
+        .fail(function(xhr, status, error) {
+            alert('Request failed: ' + error);
+        });
+}
+
+
+    function createCustomer() {
+    const formData = $('#createCustomerForm').serialize();
+
+    $.post('@Url.Action("CreateCustomer", "Home")', formData)
+        .done(function(response) {
+            if (response.success) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createCustomerModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                $('#createCustomerForm')[0].reset();
+                // Redirect to first page to see the new customer at the top
+                if (response.redirectToPage) {
+                    window.location.href = '@Url.Action("Index", "Home", new { staffPage = 1, customerPage = 1 })';
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert('Error creating customer: ' + response.errors);
+            }
+        })
+        .fail(function(xhr, status, error) {
+            alert('Request failed: ' + error);
+        });
+}
+    </script>
+}

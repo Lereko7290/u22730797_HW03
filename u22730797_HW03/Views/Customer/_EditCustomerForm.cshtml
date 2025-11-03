@@ -1,0 +1,76 @@
+﻿@model u22730797_HW03.Models.Customer
+
+@using (Html.BeginForm("Edit", "Customer", FormMethod.Post, new { id = "editCustomerForm" }))
+{
+    @Html.HiddenFor(model => model.customer_id)
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.first_name, "First Name")
+                    @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.last_name, "Last Name")
+                    @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.email, "Email")
+                    @Html.TextBoxFor(model => model.email, new { @class = "form-control", type = "email" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.phone, "Phone")
+                    @Html.TextBoxFor(model => model.phone, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.city, "City")
+                    @Html.TextBoxFor(model => model.city, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.state, "State")
+                    @Html.TextBoxFor(model => model.state, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.street, "Street Address")
+                    @Html.TextBoxFor(model => model.street, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.zip_code, "Zip Code")
+                    @Html.TextBoxFor(model => model.zip_code, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Customer</button>
+    </div>
+}

@@ -1,0 +1,56 @@
+﻿@model u22730797_HW03.Models.Staff
+
+@using (Html.BeginForm("EditStaff", "Maintain", FormMethod.Post, new { id = "editStaffForm" }))
+{
+    @Html.HiddenFor(model => model.staff_id)
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.first_name, "First Name", new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.last_name, "Last Name", new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.email, "Email", new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.email, new { @class = "form-control", type = "email" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.phone, "Phone", new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.phone, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.active, "Active", new { @class = "form-label" })
+                    @Html.DropDownListFor(model => model.active, new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Yes", Value = "1" },
+                        new SelectListItem { Text = "No", Value = "0" }
+                    }, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Staff</button>
+    </div>
+}

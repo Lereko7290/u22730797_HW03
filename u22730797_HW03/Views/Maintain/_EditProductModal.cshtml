@@ -1,0 +1,84 @@
+﻿@model u22730797_HW03.Models.Product
+@{
+    var brands = ViewBag.Brands as List<u22730797_HW03.Models.Brand>;
+    var categories = ViewBag.Categories as List<u22730797_HW03.Models.Category>;
+    // Format price with comma for display
+    var formattedPrice = Model.list_price.ToString("0.00").Replace('.', ',');
+}
+
+@using (Html.BeginForm("EditProduct", "Maintain", FormMethod.Post, new { id = "editProductForm" }))
+{
+    @Html.HiddenFor(model => model.product_id)
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">Product Name</label>
+                    <input type="text" id="product_name" name="product_name" class="form-control" value="@Model.product_name" required />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="brand_id" class="form-label">Brand</label>
+                    <select id="brand_id" name="brand_id" class="form-control" required>
+                        <option value="">Select Brand</option>
+                        @if (brands != null)
+                        {
+                            foreach (var brand in brands)
+                            {
+                                <option value="@brand.brand_id" @(brand.brand_id == Model.brand_id ? "selected" : "")>
+                                    @brand.brand_name
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="category_id" class="form-label">Category</label>
+                    <select id="category_id" name="category_id" class="form-control" required>
+                        <option value="">Select Category</option>
+                        @if (categories != null)
+                        {
+                            foreach (var category in categories)
+                            {
+                                <option value="@category.category_id" @(category.category_id == Model.category_id ? "selected" : "")>
+                                    @category.category_name
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="model_year" class="form-label">Model Year</label>
+                    <input type="number" id="model_year" name="model_year" class="form-control"
+                           value="@Model.model_year" min="2000" max="2025" step="1" required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="list_price" class="form-label">Price</label>
+                    <input type="text" id="list_price" name="list_price" class="form-control"
+                           value="@formattedPrice" pattern="[0-9]+([,\.][0-9]+)?"
+                           title="Enter a valid price (e.g., 749,99 or 749.99)" required />
+                    <small class="form-text text-muted">Use comma (,) as decimal separator</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Product</button>
+    </div>
+}
