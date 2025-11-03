@@ -15,6 +15,6 @@ namespace u22730797_HW03.Models
         public int StaffTotalPages { get; set; }
         public int CustomerTotalPages { get; set; }
         public int ProductTotalPages { get; set; }
-        public int PageSize { get; set; } = 10; // Show 10 items per page by default
+        public int PageSize { get; set; } = 10; 
     }
 }

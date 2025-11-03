@@ -20,9 +20,7 @@
                     <h5 class="mb-0">Staff (@ViewBag.StaffCount)</h5>
                     <small class="text-muted">Page @Model.StaffPage of @Model.StaffTotalPages</small>
                 </div>
-                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createStaffModal">
-                    Create Staff
-                </button>
+                @Html.ActionLink("Create Staff", "CreateStaff", "Home", null, new { @class = "btn btn-primary btn-sm" })
             </div>
             <div class="card-body">
                 <div id="staffList">
@@ -75,9 +73,7 @@
                     <h5 class="mb-0">Customers (@ViewBag.CustomerCount)</h5>
                     <small class="text-muted">Page @Model.CustomerPage of @Model.CustomerTotalPages</small>
                 </div>
-                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createCustomerModal">
-                    Create Customer
-                </button>
+                @Html.ActionLink("Create Customer", "CreateCustomer", "Home", null, new { @class = "btn btn-primary btn-sm" })
             </div>
             <div class="card-body">
                 <div id="customerList">
@@ -130,33 +126,38 @@
                 <h5>Products (@ViewBag.ProductCount)</h5>
             </div>
             <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label">Filter by Brand:</label>
-                    <select class="form-control" id="brandFilter">
-                        <option value="">All Brands</option>
-                        @if (Model.Brands != null)
-                        {
-                            foreach (var brand in Model.Brands)
+                @using (Html.BeginForm("FilterProducts", "Home", FormMethod.Get))
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Filter by Brand:</label>
+                        <select class="form-control" name="brandId">
+                            <option value="">All Brands</option>
+                            @if (Model.Brands != null)
                             {
-                                <option value="@brand.brand_id">@brand.brand_name</option>
+                                foreach (var brand in Model.Brands)
+                                {
+                                    <option value="@brand.brand_id">@brand.brand_name</option>
+                                }
                             }
-                        }
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Filter by Category:</label>
-                    <select class="form-control" id="categoryFilter">
-                        <option value="">All Categories</option>
-                        @if (Model.Categories != null)
-                        {
-                            foreach (var category in Model.Categories)
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Filter by Category:</label>
+                        <select class="form-control" name="categoryId">
+                            <option value="">All Categories</option>
+                            @if (Model.Categories != null)
                             {
-                                <option value="@category.category_id">@category.category_name</option>
+                                foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.category_id">@category.category_name</option>
+                                }
                             }
-                        }
-                    </select>
-                </div>
-                <div id="productList">
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Apply Filters</button>
+                }
+
+                <div id="productList" class="mt-3">
                     @if (Model.Products != null && Model.Products.Any())
                     {
                         foreach (var product in Model.Products)
@@ -177,157 +178,3 @@
         </div>
     </div>
 </div>
-
-<!-- Create Staff Modal -->
-<div class="modal fade" id="createStaffModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create New Staff</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createStaffForm">
-                    <div class="mb-3">
-                        <label class="form-label">First Name:</label>
-                        <input type="text" class="form-control" name="first_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" name="last_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email:</label>
-                        <input type="email" class="form-control" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone:</label>
-                        <input type="text" class="form-control" name="phone">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="createStaff()">Create Staff</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Create Customer Modal -->
-<div class="modal fade" id="createCustomerModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create New Customer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createCustomerForm">
-                    <div class="mb-3">
-                        <label class="form-label">First Name:</label>
-                        <input type="text" class="form-control" name="first_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" name="last_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email:</label>
-                        <input type="email" class="form-control" name="email">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone:</label>
-                        <input type="text" class="form-control" name="phone">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">City:</label>
-                        <input type="text" class="form-control" name="city">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">State:</label>
-                        <input type="text" class="form-control" name="state">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="createCustomer()">Create Customer</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section scripts {
-    <script>
-    // Product filtering
-    $('#brandFilter, #categoryFilter').change(function() {
-        filterProducts();
-    });
-
-    function filterProducts() {
-        const brandId = $('#brandFilter').val();
-        const categoryId = $('#categoryFilter').val();
-
-        $.get('@Url.Action("FilterProducts", "Home")', {
-            brandId: brandId || null,
-            categoryId: categoryId || null
-        }, function(data) {
-            $('#productList').html(data);
-        });
-    }
-
-   function createStaff() {
-    const formData = $('#createStaffForm').serialize();
-
-    $.post('@Url.Action("CreateStaff", "Home")', formData)
-        .done(function(response) {
-            if (response.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('createStaffModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                $('#createStaffForm')[0].reset();
-                // Redirect to first page to see the new staff at the top
-                if (response.redirectToPage) {
-                    window.location.href = '@Url.Action("Index", "Home", new { staffPage = 1, customerPage = 1 })';
-                } else {
-                    location.reload();
-                }
-            } else {
-                alert('Error creating staff: ' + response.errors);
-            }
-        })
-        .fail(function(xhr, status, error) {
-            alert('Request failed: ' + error);
-        });
-}
-
-
-    function createCustomer() {
-    const formData = $('#createCustomerForm').serialize();
-
-    $.post('@Url.Action("CreateCustomer", "Home")', formData)
-        .done(function(response) {
-            if (response.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('createCustomerModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                $('#createCustomerForm')[0].reset();
-                // Redirect to first page to see the new customer at the top
-                if (response.redirectToPage) {
-                    window.location.href = '@Url.Action("Index", "Home", new { staffPage = 1, customerPage = 1 })';
-                } else {
-                    location.reload();
-                }
-            } else {
-                alert('Error creating customer: ' + response.errors);
-            }
-        })
-        .fail(function(xhr, status, error) {
-            alert('Request failed: ' + error);
-        });
-}
-    </script>
-}

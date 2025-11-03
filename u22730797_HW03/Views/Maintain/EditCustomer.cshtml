@@ -1,0 +1,88 @@
+﻿@model u22730797_HW03.Models.Customer
+@{
+    ViewBag.Title = "Edit Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Customer</h2>
+
+@using (Html.BeginForm("EditCustomer", "Maintain", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.customer_id)
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.first_name, "First Name")
+                        @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.first_name)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.last_name, "Last Name")
+                        @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.last_name)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.email, "Email")
+                        @Html.TextBoxFor(model => model.email, new { @class = "form-control", type = "email" })
+                        @Html.ValidationMessageFor(model => model.email)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.phone, "Phone")
+                        @Html.TextBoxFor(model => model.phone, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.city, "City")
+                        @Html.TextBoxFor(model => model.city, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.state, "State")
+                        @Html.TextBoxFor(model => model.state, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.street, "Street Address")
+                        @Html.TextBoxFor(model => model.street, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.zip_code, "Zip Code")
+                        @Html.TextBoxFor(model => model.zip_code, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Customer</button>
+                @Html.ActionLink("Cancel", "Index", "Maintain", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+}

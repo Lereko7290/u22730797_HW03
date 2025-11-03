@@ -9,16 +9,226 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Color Scheme */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #f8f9fa;
+        }
+
+        /* Custom Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            margin: 0 5px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: white !important;
+                background: rgba(255,255,255,0.1);
+            }
+
+        /* Custom Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+            .card:hover {
+                box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            }
+
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            font-weight: 600;
+            border: none;
+        }
+
+        /* Custom Buttons */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #2980b9 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #229954 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #e67e22 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #c0392b 100%);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Custom Tables */
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+            .table thead th {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                font-weight: 600;
+                padding: 15px;
+            }
+
+            .table tbody td {
+                padding: 12px 15px;
+                vertical-align: middle;
+            }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        /* Custom Background and Layout */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .body-content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 30px;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Custom Form Elements - SAFE VERSION */
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+        }
+
+            .form-control:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+        .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 10px 15px;
+        }
+
+        /* Custom Alerts */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            font-weight: 500;
+            padding: 15px 20px;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* List Group Customization */
+        .list-group-item {
+            border: none;
+            border-radius: 8px !important;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .list-group-item:hover {
+                transform: translateX(5px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+        /* Badge Customization */
+        .badge {
+            border-radius: 6px;
+            font-weight: 500;
+            padding: 6px 10px;
+        }
+
+        /* Progress Bars */
+        .progress {
+            border-radius: 10px;
+            height: 8px;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+        }
+
+        /* Safe hover effects for tables */
+        .table-hover tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.08);
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             @Html.ActionLink("Bike Stores", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.ActionLink("Staff", "Index", "Staff", null, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.ActionLink("Customers", "Index", "Customer", null, new { @class = "nav-link" })</li>
@@ -30,9 +240,9 @@
         </div>
     </nav>
 
-    <div class="container body-content mt-4">
+    <div class="container body-content">
         @RenderBody()
-        <hr />
+
         <footer>
             <p>&copy; @DateTime.Now.Year - Bike Sales Management System</p>
         </footer>
@@ -42,6 +252,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SAFE JavaScript - Only visual enhancements, no form interference -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Safe hover effects for cards (visual only)
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card) => {
+                card.style.transition = 'all 0.3s ease';
+            });
+
+            // Safe table row hover effects (visual only)
+            const tableRows = document.querySelectorAll('.table tbody tr');
+            tableRows.forEach(row => {
+                row.style.transition = 'background-color 0.3s ease';
+            });
+        });
+    </script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

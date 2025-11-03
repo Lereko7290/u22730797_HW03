@@ -1,0 +1,49 @@
+﻿@model u22730797_HW03.Models.Customer
+@{
+    ViewBag.Title = "Delete Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Customer</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4>Are you sure you want to delete this customer?</h4>
+
+        <div class="alert alert-warning">
+            <strong>Warning:</strong> This action cannot be undone.
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Name:</dt>
+                    <dd class="col-sm-8">@Model.first_name @Model.last_name</dd>
+
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">@Model.email</dd>
+
+                    <dt class="col-sm-4">Phone:</dt>
+                    <dd class="col-sm-8">@Model.phone</dd>
+
+                    <dt class="col-sm-4">City:</dt>
+                    <dd class="col-sm-8">@Model.city</dd>
+
+                    <dt class="col-sm-4">State:</dt>
+                    <dd class="col-sm-8">@Model.state</dd>
+                </dl>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("DeleteCustomer", "Maintain", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.customer_id)
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger">Delete Customer</button>
+                @Html.ActionLink("Cancel", "Index", "Maintain", null, new { @class = "btn btn-secondary" })
+            </div>
+        }
+    </div>
+</div>

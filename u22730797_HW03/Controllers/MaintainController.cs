@@ -13,7 +13,7 @@ namespace u22730797_HW03.Controllers
 
         public async Task<ActionResult> Index(int staffPage = 1, int customerPage = 1, int productPage = 1)
         {
-            int pageSize = 10; // Items per page
+            int pageSize = 10;
 
             var viewModel = new MaintainViewModel
             {
@@ -23,34 +23,34 @@ namespace u22730797_HW03.Controllers
                 PageSize = pageSize
             };
 
-            // Staff pagination - order by newest first
+            // Staff pagination
             var staffCount = await db.staffs.CountAsync();
             viewModel.StaffTotalPages = (int)Math.Ceiling(staffCount / (double)pageSize);
 
             viewModel.Staffs = await db.staffs
-                .OrderByDescending(s => s.staff_id)  // Newest first
+                .OrderByDescending(s => s.staff_id)
                 .Skip((staffPage - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Customer pagination - order by newest first
+            // Customer pagination
             var customerCount = await db.customers.CountAsync();
             viewModel.CustomerTotalPages = (int)Math.Ceiling(customerCount / (double)pageSize);
 
             viewModel.Customers = await db.customers
-                .OrderByDescending(c => c.customer_id)  // Newest first
+                .OrderByDescending(c => c.customer_id)
                 .Skip((customerPage - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Product pagination - order by newest first
+            // Product pagination
             var productCount = await db.products.CountAsync();
             viewModel.ProductTotalPages = (int)Math.Ceiling(productCount / (double)pageSize);
 
             viewModel.Products = await db.products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
-                .OrderByDescending(p => p.product_id)  // Newest first
+                .OrderByDescending(p => p.product_id)
                 .Skip((productPage - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -66,22 +66,22 @@ namespace u22730797_HW03.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("_EditStaffModal", staff);
+            return View("EditStaff", staff); // Changed to full view
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditStaff(Staff staff)
         {
             try
             {
-                // Get the existing staff record to preserve any required fields that might not be in the form
                 var existingStaff = await db.staffs.FindAsync(staff.staff_id);
                 if (existingStaff == null)
                 {
-                    return Json(new { success = false, errors = "Staff not found" });
+                    ModelState.AddModelError("", "Staff not found");
+                    return View("EditStaff", staff);
                 }
 
-                // Update only the fields that are in the form
                 existingStaff.first_name = staff.first_name;
                 existingStaff.last_name = staff.last_name;
                 existingStaff.email = staff.email;
@@ -91,23 +91,33 @@ namespace u22730797_HW03.Controllers
                 if (ModelState.IsValid)
                 {
                     await db.SaveChangesAsync();
-                    return Json(new { success = true });
+                    return RedirectToAction("Index"); // Changed to redirect
                 }
                 else
                 {
-                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                    return Json(new { success = false, errors = string.Join(", ", errors) });
+                    return View("EditStaff", staff);
                 }
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Staff update error: {ex.Message}");
-                return Json(new { success = false, errors = ex.Message });
+                ModelState.AddModelError("", $"Error updating staff: {ex.Message}");
+                return View("EditStaff", staff);
             }
         }
 
-        [HttpPost]
         public async Task<ActionResult> DeleteStaff(int id)
+        {
+            var staff = await db.staffs.FindAsync(id);
+            if (staff == null)
+            {
+                return HttpNotFound();
+            }
+            return View("DeleteStaff", staff); // Changed to full view
+        }
+
+        [HttpPost, ActionName("DeleteStaff")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteStaffConfirmed(int id)
         {
             var staff = await db.staffs.FindAsync(id);
             if (staff != null)
@@ -115,7 +125,7 @@ namespace u22730797_HW03.Controllers
                 db.staffs.Remove(staff);
                 await db.SaveChangesAsync();
             }
-            return Json(new { success = true });
+            return RedirectToAction("Index"); // Changed to redirect
         }
 
         // Customer CRUD
@@ -126,23 +136,35 @@ namespace u22730797_HW03.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("_EditCustomerModal", customer);
+            return View("EditCustomer", customer); // Changed to full view
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditCustomer(Customer customer)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(customer).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return Json(new { success = true });
+                return RedirectToAction("Index"); // Changed to redirect
             }
-            return PartialView("_EditCustomerModal", customer);
+            return View("EditCustomer", customer); // Changed to full view
         }
 
-        [HttpPost]
         public async Task<ActionResult> DeleteCustomer(int id)
+        {
+            var customer = await db.customers.FindAsync(id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View("DeleteCustomer", customer); // Changed to full view
+        }
+
+        [HttpPost, ActionName("DeleteCustomer")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteCustomerConfirmed(int id)
         {
             var customer = await db.customers.FindAsync(id);
             if (customer != null)
@@ -150,7 +172,7 @@ namespace u22730797_HW03.Controllers
                 db.customers.Remove(customer);
                 await db.SaveChangesAsync();
             }
-            return Json(new { success = true });
+            return RedirectToAction("Index"); // Changed to redirect
         }
 
         // Product CRUD
@@ -163,87 +185,48 @@ namespace u22730797_HW03.Controllers
             }
             ViewBag.Brands = await db.brands.ToListAsync();
             ViewBag.Categories = await db.categories.ToListAsync();
-            return PartialView("_EditProductModal", product);
+            return View("EditProduct", product); // Changed to full view
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditProduct(FormCollection form)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditProduct(Product product)
         {
             try
             {
-                // Parse product ID
-                if (!int.TryParse(form["product_id"], out int productId))
+                if (ModelState.IsValid)
                 {
-                    return Json(new { success = false, errors = "Invalid product ID" });
-                }
-
-                var product = await db.products.FindAsync(productId);
-                if (product == null)
-                {
-                    return Json(new { success = false, errors = "Product not found" });
-                }
-
-                // Update product name
-                product.product_name = form["product_name"];
-
-                // Parse brand_id with validation
-                if (!int.TryParse(form["brand_id"], out int brandId))
-                {
-                    return Json(new { success = false, errors = "Please select a valid brand" });
-                }
-                product.brand_id = brandId;
-
-                // Parse category_id with validation
-                if (!int.TryParse(form["category_id"], out int categoryId))
-                {
-                    return Json(new { success = false, errors = "Please select a valid category" });
-                }
-                product.category_id = categoryId;
-
-                // Parse list_price - handle both comma and dot decimal separators
-                string priceString = form["list_price"];
-                if (string.IsNullOrEmpty(priceString))
-                {
-                    return Json(new { success = false, errors = "Please enter a valid price" });
-                }
-
-                // Replace comma with dot for proper decimal parsing
-                priceString = priceString.Replace(',', '.');
-
-                if (!decimal.TryParse(priceString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal listPrice))
-                {
-                    return Json(new { success = false, errors = "Please enter a valid price format (e.g., 749,99 or 749.99)" });
-                }
-                product.list_price = listPrice;
-
-                // Parse model_year with validation
-                if (!short.TryParse(form["model_year"], out short modelYear))
-                {
-                    return Json(new { success = false, errors = "Please enter a valid model year" });
-                }
-                product.model_year = modelYear;
-
-                // Validate the model
-                if (TryValidateModel(product))
-                {
+                    db.Entry(product).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-                    return Json(new { success = true, message = "Product updated successfully" });
+                    return RedirectToAction("Index"); // Changed to redirect
                 }
-                else
-                {
-                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                    return Json(new { success = false, errors = string.Join(", ", errors) });
-                }
+
+                ViewBag.Brands = await db.brands.ToListAsync();
+                ViewBag.Categories = await db.categories.ToListAsync();
+                return View("EditProduct", product);
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Product update error: {ex.Message}");
-                return Json(new { success = false, errors = $"Database error: {ex.Message}" });
+                ModelState.AddModelError("", $"Error updating product: {ex.Message}");
+                ViewBag.Brands = await db.brands.ToListAsync();
+                ViewBag.Categories = await db.categories.ToListAsync();
+                return View("EditProduct", product);
             }
         }
 
-        [HttpPost]
         public async Task<ActionResult> DeleteProduct(int id)
+        {
+            var product = await db.products.FindAsync(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            return View("DeleteProduct", product); // Changed to full view
+        }
+
+        [HttpPost, ActionName("DeleteProduct")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteProductConfirmed(int id)
         {
             var product = await db.products.FindAsync(id);
             if (product != null)
@@ -251,7 +234,7 @@ namespace u22730797_HW03.Controllers
                 db.products.Remove(product);
                 await db.SaveChangesAsync();
             }
-            return Json(new { success = true });
+            return RedirectToAction("Index"); // Changed to redirect
         }
 
         protected override void Dispose(bool disposing)

@@ -27,21 +27,22 @@ namespace u22730797_HW03.Controllers
             }
             ViewBag.Brands = await db.brands.ToListAsync();
             ViewBag.Categories = await db.categories.ToListAsync();
-            return PartialView("_EditProductForm", product);
+            return View(product); 
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Product product)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return Json(new { success = true });
+                return RedirectToAction("Index"); 
             }
             ViewBag.Brands = await db.brands.ToListAsync();
             ViewBag.Categories = await db.categories.ToListAsync();
-            return PartialView("_EditProductForm", product);
+            return View(product); 
         }
 
         public async Task<ActionResult> Delete(int id)
@@ -51,16 +52,17 @@ namespace u22730797_HW03.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("_DeleteProductModal", product);
+            return View(product); 
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var product = await db.products.FindAsync(id);
             db.products.Remove(product);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); 
         }
 
         protected override void Dispose(bool disposing)

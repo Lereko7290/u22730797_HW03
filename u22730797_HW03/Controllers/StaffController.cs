@@ -22,19 +22,20 @@ namespace u22730797_HW03.Controllers
             {
                 return HttpNotFound();
             }
-            return View("_EditStaffForm", staff);
+            return View(staff); 
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Staff staff)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(staff).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return Json(new { success = true });
+                return RedirectToAction("Index"); 
             }
-            return View("_EditStaffForm", staff);
+            return View(staff); 
         }
 
         public async Task<ActionResult> Delete(int id)
@@ -44,16 +45,17 @@ namespace u22730797_HW03.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("_DeleteStaffModal", staff);
+            return View(staff); 
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var staff = await db.staffs.FindAsync(id);
             db.staffs.Remove(staff);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); 
         }
 
         protected override void Dispose(bool disposing)

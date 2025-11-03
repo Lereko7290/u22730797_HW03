@@ -1,0 +1,28 @@
+﻿@model string
+@{
+    ViewBag.Title = "Delete Report File";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Report File</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4>Are you sure you want to delete this report file?</h4>
+
+        <div class="alert alert-warning">
+            <strong>Warning:</strong> This action cannot be undone. The file "@Model" will be permanently deleted.
+        </div>
+
+        @using (Html.BeginForm("DeleteFileConfirmed", "Report", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("fileName", Model)
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger">Yes, Delete File</button>
+                @Html.ActionLink("Cancel", "Archive", "Report", null, new { @class = "btn btn-secondary" })
+            </div>
+        }
+    </div>
+</div>

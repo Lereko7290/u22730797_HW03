@@ -1,0 +1,156 @@
+﻿@model u22730797_HW03.Controllers.ReportViewModel
+@{
+    ViewBag.Title = Model.ReportTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.ReportTitle</h2>
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5>@Model.ReportDescription</h5>
+    </div>
+    <div class="card-body">
+        <!-- Chart Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="chart-container" style="position: relative; height:400px; width:100%">
+                    <canvas id="reportChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    @Html.Raw(Model.HtmlTable)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Save Report Section -->
+<div class="card mt-4">
+    <div class="card-header bg-info text-white">
+        <h5><i class="fas fa-save"></i> Save This Report</h5>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("SaveReport", "Report", FormMethod.Post, new { id = "saveReportForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ReportType", Model.ReportType)
+            @Html.Hidden("ChartType", Model.ChartType)
+            @Html.Hidden("ReportData", Model.ReportData)
+            <input type="hidden" id="ChartImageData" name="ChartImageData" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="font-weight-bold">File Name:</label>
+                        <input type="text" class="form-control" name="FileName" required placeholder="Enter file name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="font-weight-bold">File Type:</label>
+                        <select class="form-control" name="FileType" required>
+                            <option value="pdf">PDF Document (.pdf)</option>
+                            <option value="docx">Word Document (.docx)</option>
+                            <option value="csv">CSV File (.csv)</option>
+                            <option value="txt">Text File (.txt)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+          
+            <div class="form-group">
+                <label class="font-weight-bold">Report Description:</label>
+                <textarea class="form-control" name="Description" id="Description" rows="4"
+                          placeholder="Enter a detailed description of this report..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success" onclick="updateChartImage()">
+                <i class="fas fa-file-export"></i> Save Report
+            </button>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    @Html.ActionLink("Back to Reports", "Index", "Report", null, new { @class = "btn btn-secondary" })
+    @Html.ActionLink("Generate Another Report", "Index", "Report", null, new { @class = "btn btn-primary" })
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Function to capture chart as image
+        function captureChartAsImage() {
+            return new Promise((resolve) => {
+                const chartCanvas = document.getElementById('reportChart');
+                if (chartCanvas && window.reportChart) {
+                    try {
+                        const imageData = window.reportChart.toBase64Image();
+                        resolve(imageData);
+                    } catch (e) {
+                        console.error('Error capturing chart image:', e);
+                        resolve(null);
+                    }
+                } else {
+                    resolve(null);
+                }
+            });
+        }
+
+        
+        function updateChartImage() {
+            captureChartAsImage().then(imageData => {
+                document.getElementById('ChartImageData').value = imageData || '';
+                return true; 
+            });
+            return true;
+        }
+
+        // Initialize Chart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const ctx = document.getElementById('reportChart').getContext('2d');
+                const chartConfig = @Html.Raw(Model.ChartConfig);
+
+                console.log('Chart config:', chartConfig); 
+
+                // Initialize the chart
+                window.reportChart = new Chart(ctx, chartConfig);
+
+                console.log('Chart initialized successfully'); 
+
+                
+                const descriptionTextarea = document.getElementById('Description');
+                if (descriptionTextarea) {
+                    descriptionTextarea.style.resize = 'both';
+                }
+
+                
+                setTimeout(() => {
+                    updateChartImage();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error initializing chart:', error);
+                // Display error message to user
+                const chartContainer = document.querySelector('.chart-container');
+                if (chartContainer) {
+                    chartContainer.innerHTML = '<div class="alert alert-danger">Error loading chart: ' + error.message + '</div>';
+                }
+            }
+        });
+
+        
+        document.getElementById('saveReportForm')?.addEventListener('submit', function(e) {
+            updateChartImage();
+        });
+    </script>
+}

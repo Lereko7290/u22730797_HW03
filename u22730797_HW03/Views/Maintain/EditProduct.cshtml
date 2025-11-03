@@ -1,0 +1,72 @@
+﻿@model u22730797_HW03.Models.Product
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var brands = ViewBag.Brands as List<u22730797_HW03.Models.Brand>;
+    var categories = ViewBag.Categories as List<u22730797_HW03.Models.Category>;
+}
+
+<h2>Edit Product</h2>
+
+@using (Html.BeginForm("EditProduct", "Maintain", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.product_id)
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.product_name, "Product Name")
+                        @Html.TextBoxFor(model => model.product_name, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(model => model.product_name)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.brand_id, "Brand")
+                        @Html.DropDownListFor(model => model.brand_id,
+                            new SelectList(brands, "brand_id", "brand_name"),
+                            "Select Brand", new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(model => model.brand_id)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, "Category")
+                        @Html.DropDownListFor(model => model.category_id,
+                            new SelectList(categories, "category_id", "category_name"),
+                            "Select Category", new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(model => model.category_id)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.model_year, "Model Year")
+                        @Html.TextBoxFor(model => model.model_year, new { @class = "form-control", type = "number", min = "2000", max = "2025", required = "required" })
+                        @Html.ValidationMessageFor(model => model.model_year)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.list_price, "Price")
+                        @Html.TextBoxFor(model => model.list_price, new { @class = "form-control", type = "number", step = "0.01", required = "required" })
+                        @Html.ValidationMessageFor(model => model.list_price)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Product</button>
+                @Html.ActionLink("Cancel", "Index", "Maintain", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+}
